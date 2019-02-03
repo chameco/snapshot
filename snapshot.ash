@@ -288,7 +288,7 @@ boolean has_iotm(int y, int m) {
 	}
 }
 
-string build_iotm_list() {
+string build_json_iotm_list() {
 	string ret = "[";
 	if (has_iotm(2004, 10)) ret += "true"; else ret += "false";
 	if (has_iotm(2004, 11)) ret += ",true"; else ret += ",false";
@@ -301,21 +301,33 @@ string build_iotm_list() {
 	return ret + "]";
 }
 
-string build_sc_skill_list() { return "[]"; }
-string build_tt_skill_list() { return "[]"; }
-string build_pm_skill_list() { return "[]"; }
-string build_sa_skill_list() { return "[]"; }
-string build_db_skill_list() { return "[]"; }
-string build_at_skill_list() { return "[]"; }
+string build_json_snapshot() {
+	return "{\"iotm\":" + build_json_iotm_list() + "}";
+}
+
+string build_url_iotm_list() {
+	string ret = "";
+	if (has_iotm(2004, 10)) ret += "Y"; else ret += "N";
+	if (has_iotm(2004, 11)) ret += "Y"; else ret += "N";
+	if (has_iotm(2004, 12)) ret += "Y"; else ret += "N";
+	for (int y = 2005; y <= 2019; ++y) {
+		for (int m = 1; m <= 12; ++m) {
+			if (has_iotm(y, m)) ret += "Y"; else ret += "N";
+		}
+	}
+	return ret;
+}
+
+string build_url_snapshot(string server) {
+	return server + "/coal/snapshot/mafia/" + get_player_id(my_name()) + "?iotms=" + build_url_iotm_list();
+}
 
 void main() {
-	string snapshot = "{";
-	snapshot += "\"iotm\":" + build_iotm_list();
-	snapshot += ",\"scSkills\":" + build_sc_skill_list();
-	snapshot += ",\"ttSkills\":" + build_tt_skill_list();
-	snapshot += ",\"pmSkills\":" + build_pm_skill_list();
-	snapshot += ",\"saSkills\":" + build_sa_skill_list();
-	snapshot += ",\"dbSkills\":" + build_db_skill_list();
-	snapshot += ",\"atSkills\":" + build_at_skill_list();
-	print(snapshot + "}");
+	string server = "http://goodstuff.moe";
+	if (contains_text(visit_url(build_url_snapshot(server), false, true), "successful")) {
+		print("Snapshot upload success!", "green");
+		print_html("<a href=\"" + server + "/coal/snapshot/#" + get_player_id(my_name()) + "\">Click here to view.</a>");
+	} else {
+		print("Failed to upload snapshot. Something is broken!", "red");
+	}
 }
