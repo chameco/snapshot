@@ -163,7 +163,7 @@ boolean has_iotm(int y, int m) {
 		case  8: return has_item("fairy-worn boots") || has_familiar("Pair of Stomping Boots");
 		case  9: return has_item("Tome of Clip Art") || has_skill("Summon Clip Art");
 		case 10: return has_item("Make-Your-Own-Vampire-Fangs kit") || has_item("plastic vampire fangs");
-		case 11: return has_item("stuffed-shirt scarecrow") || has_item("Fancypants Scarecrow");
+		case 11: return has_item("stuffed-shirt scarecrow") || has_familiar("Fancypants Scarecrow");
 		case 12: return has_item("Mint Salton Pepper's Peppermint Seed Catalog") || has_item("Peppermint Pip Packet");
 		default: return false;
 		}
